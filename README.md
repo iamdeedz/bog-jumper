@@ -1,2 +1,2 @@
-# bog-jumper
-Bog Jumper platformer
+# Bog Jumper
+Platformer game made with python and pygame
