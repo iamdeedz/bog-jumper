@@ -64,7 +64,7 @@ class Player:
         # Gravity
         if not self.isGrounded:
             self.yVelocity = 0.125
-        elif (self.position["r"] + self.yVelocity) != self.yVelocity:
+        elif (self.position["r"] + self.yVelocity) != self.position["r"]:
             self.yVelocity = 0
 
         # Change Position
