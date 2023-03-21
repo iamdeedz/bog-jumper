@@ -16,6 +16,8 @@ class Player:
         self.isGrounded = True
 
     def update(self, lvl):
+        self.xVelocity = 0
+        self.yVelocity = 0
         row = floor(self.position["r"])
         loweredCol = floor(self.position["c"])
         raisedCol = ceil(self.position["c"])
