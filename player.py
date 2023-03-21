@@ -81,10 +81,15 @@ def isInBounds(player, lvl):
     row = floor(player.position["r"])
     loweredCol = floor(player.position["c"])
     raisedCol = ceil(player.position["c"])
+    longestRow = lvl[0]
 
-    return 0 <= row + 1 < len(lvl) and \
-        0 <= loweredCol < len(lvl[row + 1]) and \
-        0 <= raisedCol < len(lvl[row + 1]) and \
+    for i in range(len(lvl)):
+        if len(lvl[i]) > len(longestRow):
+            longestRow = lvl[i]
+
+    return 0 <= row + 1 < len(longestRow) and \
+        0 <= loweredCol < len(longestRow) and \
+        0 <= raisedCol < len(longestRow) and \
         0 <= row < len(lvl) and \
         0 <= loweredCol < len(lvl[row]) and \
         0 <= raisedCol < len(lvl[row])
