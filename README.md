@@ -1,2 +1,2 @@
 # Bog Jumper
-Platformer game made with python and pygame
+Platformer game made with python and pygame.
