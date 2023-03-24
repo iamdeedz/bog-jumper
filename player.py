@@ -14,7 +14,7 @@ class Player:
         self.isRightClear = True
         self.isLeftClear = True
         self.isGrounded = True
-        self.longestRow = 0
+        self.longestRow = None
 
     def update(self, lvl):
         self.xVelocity = 0
@@ -82,13 +82,17 @@ class Player:
         loweredCol = floor(self.position["c"])
         raisedCol = ceil(self.position["c"])
 
-        for i in range(len(lvl)):
-            if len(lvl[i]) > self.longestRow:
-                self.longestRow = len(lvl[i])
+        if self.longestRow is None:
+            self.longestRow = 0
+            for i in range(len(lvl)):
+                if len(lvl[i]) > self.longestRow:
+                    self.longestRow = len(lvl[i])
 
-        return 0 <= row + 1 < self.longestRow and \
-            0 <= loweredCol < self.longestRow and \
-            0 <= raisedCol < self.longestRow and \
+        print(self.longestRow)
+
+        return 0 <= row + 1 < len(lvl) and \
+            0 <= loweredCol < len(lvl) and \
+            0 <= raisedCol < len(lvl) and \
             0 <= row < len(lvl) and \
-            0 <= loweredCol < len(lvl[row]) and \
-            0 <= raisedCol < len(lvl[row])
+            0 <= loweredCol < self.longestRow and \
+            0 <= raisedCol < self.longestRow
