@@ -20,8 +20,9 @@ class Debugger:
         isLeftPressedText = self.font.render(f"Player isLeftPressed = {player.isLeftPressed}", True, p.Color("green"))
         spawnText = self.font.render(f"Player spawn = {player.spawn}", True, p.Color("green"))
         lvlText = self.font.render(f"Level = {lvl}", True, p.Color("green"))
+        longestRowText = self.font.render(f"Longest Row = {player.longestRow}", True, p.Color("green"))
         texts = [title, xVelocityText, yVelocityText, xPosText, yPosText, lvlText, isGroundedText, isRightClearText,
-                 isLeftClearText, spawnText, isRightPressedText, isLeftPressedText]
+                 isLeftClearText, spawnText, isRightPressedText, isLeftPressedText, longestRowText]
         for i in range(len(texts)):
             txt = texts[i]
             self.screen.blit(txt, p.Rect(1290, (i * 20) + 20, 0, 0))
