@@ -14,6 +14,7 @@ class Player:
         self.isRightClear = True
         self.isLeftClear = True
         self.isGrounded = True
+        self.longestRow = None
 
     def update(self, lvl):
         self.xVelocity = 0
@@ -23,7 +24,7 @@ class Player:
         raisedCol = ceil(self.position["c"])
 
         # Collision Detection
-        if isInBounds(self, lvl):
+        if self.isInBounds(lvl):
 
             # Ground Detection
             if lvl[row + 1][loweredCol] == 1 or lvl[row + 1][raisedCol] == 1:
@@ -76,15 +77,22 @@ class Player:
     def reset(self):
         self.position["c"], self.position["r"] = self.spawn["c"], self.spawn["r"]
 
+    def isInBounds(self, lvl):
+        row = floor(self.position["r"])
+        loweredCol = floor(self.position["c"])
+        raisedCol = ceil(self.position["c"])
 
-def isInBounds(player, lvl):
-    row = floor(player.position["r"])
-    loweredCol = floor(player.position["c"])
-    raisedCol = ceil(player.position["c"])
+        if self.longestRow is None:
+            self.longestRow = 0
+            for i in range(len(lvl)):
+                if len(lvl[i]) > self.longestRow:
+                    self.longestRow = len(lvl[i])
 
-    return 0 <= row + 1 < len(lvl) and \
-        0 <= loweredCol < len(lvl[row + 1]) and \
-        0 <= raisedCol < len(lvl[row + 1]) and \
-        0 <= row < len(lvl) and \
-        0 <= loweredCol < len(lvl[row]) and \
-        0 <= raisedCol < len(lvl[row])
+        print(self.longestRow)
+
+        return 0 <= row + 1 < len(lvl) and \
+            0 <= loweredCol < self.longestRow and \
+            0 <= raisedCol < self.longestRow and \
+            0 <= row < len(lvl) and \
+            0 <= loweredCol < self.longestRow and \
+            0 <= raisedCol < self.longestRow
