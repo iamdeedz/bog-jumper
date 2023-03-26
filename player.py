@@ -11,8 +11,10 @@ class Player:
         self.yVelocity = 0
         self.isRightPressed = False
         self.isLeftPressed = False
+        self.isUpPressed = False
         self.isRightClear = True
         self.isLeftClear = True
+        self.isTopClear = True
         self.isGrounded = True
         self.longestRow = None
 
@@ -23,31 +25,49 @@ class Player:
         loweredCol = floor(self.position["c"])
         raisedCol = ceil(self.position["c"])
 
-        # Collision Detection
-        if self.isInBounds(lvl):
+        # Check if player is below map
+        if row > len(lvl):
+            self.reset()
 
-            # Ground Detection
+        # Collision Detection
+
+        # Ceiling Detection
+        try:
+            if lvl[row - 1][loweredCol] == 0 or lvl[row - 1][raisedCol] == 0:
+                self.isTopClear = True
+            else:
+                self.isTopClear = False
+        except IndexError:
+            self.isTopClear = False
+
+        # Ground Detection
+        try:
             if lvl[row + 1][loweredCol] == 1 or lvl[row + 1][raisedCol] == 1:
                 self.isGrounded = True
             else:
                 self.isGrounded = False
+        except IndexError:
+            self.isGrounded = False
 
-            # Wall Detection
+        # Wall Detection
 
-            # Left
+        # Left
+        try:
             if lvl[row][loweredCol] == 0:
                 self.isLeftClear = True
             else:
                 self.isLeftClear = False
+        except IndexError:
+            self.isLeftClear = True
 
-            # Right
+        # Right
+        try:
             if lvl[row][raisedCol] == 0:
                 self.isRightClear = True
             else:
                 self.isRightClear = False
-
-        else:
-            self.reset()
+        except IndexError:
+            self.isRightClear = True
 
         # Movement
 
@@ -76,21 +96,3 @@ class Player:
 
     def reset(self):
         self.position["c"], self.position["r"] = self.spawn["c"], self.spawn["r"]
-
-    def isInBounds(self, lvl):
-        row = floor(self.position["r"])
-        loweredCol = floor(self.position["c"])
-        raisedCol = ceil(self.position["c"])
-
-        if self.longestRow is None:
-            self.longestRow = 0
-            for i in range(len(lvl)):
-                if len(lvl[i]) > self.longestRow:
-                    self.longestRow = len(lvl[i])
-
-        return 0 <= row + 1 < len(lvl) and \
-            0 <= loweredCol < self.longestRow and \
-            0 <= raisedCol < self.longestRow and \
-            0 <= row < len(lvl) and \
-            0 <= loweredCol < self.longestRow and \
-            0 <= raisedCol < self.longestRow

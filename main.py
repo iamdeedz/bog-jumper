@@ -29,13 +29,17 @@ def main():
             elif e.type == p.KEYDOWN:
                 if e.key == p.K_RIGHT:
                     player.isRightPressed = True
-                elif e.key == p.K_LEFT:
+                if e.key == p.K_LEFT:
                     player.isLeftPressed = True
+                if e.key == p.K_UP:
+                    player.isUpPressed = True
             elif e.type == p.KEYUP:
                 if e.key == p.K_RIGHT:
                     player.isRightPressed = False
                 if e.key == p.K_LEFT:
                     player.isLeftPressed = False
+                if e.key == p.K_UP:
+                    player.isUpPressed = False
         screen.fill(p.Color("black"))
         player.update(level)
         debugger.update(player, levelName)
