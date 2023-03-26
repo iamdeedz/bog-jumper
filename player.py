@@ -88,6 +88,8 @@ class Player:
                 if len(lvl[i]) > self.longestRow:
                     self.longestRow = len(lvl[i])
 
+        print(self.longestRow)
+
         return 0 <= row + 1 < len(lvl) and \
             0 <= loweredCol < self.longestRow and \
             0 <= raisedCol < self.longestRow and \
