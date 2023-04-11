@@ -16,17 +16,15 @@ class Player:
         self.isLeftClear = True
         self.isTopClear = True
         self.isGrounded = True
-        self.longestRow = None
 
     def update(self, lvl):
-        self.xVelocity = 0
-        self.yVelocity = 0
         row = floor(self.position["r"])
         loweredCol = floor(self.position["c"])
         raisedCol = ceil(self.position["c"])
 
         # Check if player is below map
-        if row > len(lvl):
+        if row > len(lvl) or loweredCol < 0 or \
+                row < -3:
             self.reset()
 
         # Collision Detection
@@ -73,24 +71,38 @@ class Player:
 
         # Right
         if not self.isRightClear:
+            if self.xVelocity > 0:
+                self.xVelocity = 0
+        elif not self.isRightPressed:
             self.xVelocity = 0
-        elif self.isRightPressed:
+        else:
             self.xVelocity = 0.15
 
         # Left
         if not self.isLeftClear:
             if self.xVelocity < 0:
                 self.xVelocity = 0
+        elif self.xVelocity <= 0 and not self.isLeftPressed:
+            self.xVelocity = 0
         elif self.isLeftPressed:
             self.xVelocity = -0.15
 
-        # Gravity
-        if not self.isGrounded:
-            self.yVelocity = 0.125
-        elif (self.position["r"] + self.yVelocity) != self.position["r"]:
-            self.yVelocity = 0
+        # Jumping
+        if self.isUpPressed and self.isGrounded:
+            self.yVelocity = -0.25
 
-        # Change Position
+        # Gravity
+        if self.yVelocity < 0:
+            if self.yVelocity > -0.05 or not self.isTopClear:
+                self.yVelocity = 0
+            else:
+                self.yVelocity *= 0.85
+        else:
+            if self.isGrounded:
+                self.yVelocity = 0
+            else:
+                self.yVelocity = 0.125
+
         self.position["c"] += self.xVelocity
         self.position["r"] += self.yVelocity
 

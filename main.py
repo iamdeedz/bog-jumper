@@ -56,6 +56,3 @@ def loadImages():
 
 if __name__ == "__main__":
     main()
-
-#  https://ibb.co/02HtJfV
-#  https://ibb.co/M7H9rS2
