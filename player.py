@@ -9,6 +9,8 @@ class Player:
         self.position = {"c": col, "r": row}
         self.xVelocity = 0
         self.yVelocity = 0
+        self.lives = 3
+        self.score = 0
         self.isRightPressed = False
         self.isLeftPressed = False
         self.isUpPressed = False
@@ -16,16 +18,17 @@ class Player:
         self.isLeftClear = True
         self.isTopClear = True
         self.isGrounded = True
+        self.orientation = "right"
 
     def update(self, lvl):
         row = floor(self.position["r"])
         loweredCol = floor(self.position["c"])
         raisedCol = ceil(self.position["c"])
 
-        # Check if player is below map
-        if row > len(lvl) or loweredCol < 0 or \
-                row < -3:
+        # Check if player is in bounds
+        if row > len(lvl) or row < -3:
             self.reset()
+            self.lives -= 1
 
         # Collision Detection
 
@@ -36,11 +39,13 @@ class Player:
             else:
                 self.isTopClear = False
         except IndexError:
-            self.isTopClear = False
+            self.isTopClear = True
 
         # Ground Detection
         try:
-            if lvl[row + 1][loweredCol] == 1 or lvl[row + 1][raisedCol] == 1:
+            if loweredCol < 0:
+                self.isGrounded = False
+            elif lvl[row + 1][loweredCol] == 1 or lvl[row + 1][raisedCol] == 1:
                 self.isGrounded = True
             else:
                 self.isGrounded = False
@@ -51,7 +56,9 @@ class Player:
 
         # Left
         try:
-            if lvl[row][loweredCol] == 0:
+            if loweredCol < 0:
+                self.isLeftClear = True
+            elif lvl[row][loweredCol] == 0:
                 self.isLeftClear = True
             else:
                 self.isLeftClear = False
@@ -60,7 +67,9 @@ class Player:
 
         # Right
         try:
-            if lvl[row][raisedCol] == 0:
+            if loweredCol < 0:
+                self.isRightClear = True
+            elif lvl[row][raisedCol] == 0:
                 self.isRightClear = True
             else:
                 self.isRightClear = False
