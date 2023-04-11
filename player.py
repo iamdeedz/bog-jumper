@@ -9,7 +9,7 @@ class Player:
         self.position = {"c": col, "r": row}
         self.xVelocity = 0
         self.yVelocity = 0
-        self.lives = 3
+        self.lives = 1
         self.score = 0
         self.isRightPressed = False
         self.isLeftPressed = False
@@ -58,7 +58,7 @@ class Player:
         try:
             if loweredCol < 0:
                 self.isLeftClear = True
-            elif lvl[row][loweredCol] == 0:
+            elif lvl[row][loweredCol] == 0 or lvl[row][loweredCol] == 2:
                 self.isLeftClear = True
             else:
                 self.isLeftClear = False
@@ -69,7 +69,7 @@ class Player:
         try:
             if loweredCol < 0:
                 self.isRightClear = True
-            elif lvl[row][raisedCol] == 0:
+            elif lvl[row][raisedCol] == 0 or lvl[row][raisedCol] == 2:
                 self.isRightClear = True
             else:
                 self.isRightClear = False
@@ -114,6 +114,35 @@ class Player:
 
         self.position["c"] += self.xVelocity
         self.position["r"] += self.yVelocity
+
+        self.checkForCollectables(lvl)
+
+    def checkForCollectables(self, lvl):
+        row = floor(self.position["r"])
+        loweredCol = floor(self.position["c"])
+        raisedCol = ceil(self.position["c"])
+
+        try:
+            # Stars
+            if lvl[row][loweredCol] == 2:
+                self.score += 1
+                lvl[row][loweredCol] = 0
+
+            if lvl[row][raisedCol] == 2:
+                self.score += 1
+                lvl[row][raisedCol] = 0
+
+            # Hearts
+            if lvl[row][loweredCol] == 3:
+                self.lives += 1
+                lvl[row][loweredCol] = 0
+
+            if lvl[row][raisedCol] == 3:
+                self.lives += 1
+                lvl[row][raisedCol] = 0
+
+        except IndexError:
+            pass
 
     def reset(self):
         self.position["c"], self.position["r"] = self.spawn["c"], self.spawn["r"]

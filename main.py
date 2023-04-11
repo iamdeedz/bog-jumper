@@ -98,39 +98,19 @@ def main():
             scoreRect.center = (width / 2, height / 2)
             screen.blit(scoreText, scoreRect)
 
-            # Restart Text
-            restartText = font.render("Click Anywhere to Restart", True, p.Color("grey 50"))
-            restartRect = restartText.get_rect()
-            restartRect.center = (width / 2, height / 2 + 50)
-            screen.blit(restartText, restartRect)
-
             for e in p.event.get():
                 if e.type == p.QUIT:
                     running = False
-                elif e.type == p.MOUSEBUTTONDOWN:
-                    global isRestarting
-                    isRestarting = True
-                    return
 
         clock.tick(fps)
         p.display.update()
 
 
 def loadImages():
-    items = ["block", "player"]
+    items = ["block", "player", "star", "heart"]
     for item in items:
         images[item] = p.transform.scale(p.image.load("images/" + item + ".png"), (blockWidth, blockHeight))
 
 
-def loop():
-    global isRestarting
-    isRestarting = False
-
-    main()
-
-    if isRestarting:
-        loop()
-
-
 if __name__ == '__main__':
-    loop()
+    main()
