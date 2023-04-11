@@ -1,7 +1,5 @@
-
 from levels import *
 from player import *
-from debugger import *
 import pygame as p
 
 width = 1280
