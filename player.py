@@ -18,6 +18,7 @@ class Player:
         self.isLeftClear = True
         self.isTopClear = True
         self.isGrounded = True
+        self.isAtFinish = False
         self.orientation = "right"
 
     def update(self, lvl):
@@ -58,7 +59,10 @@ class Player:
         try:
             if loweredCol < 0:
                 self.isLeftClear = True
-            elif lvl[row][loweredCol] == 0 or lvl[row][loweredCol] == 2:
+            elif lvl[row][loweredCol] == 0 or \
+                    lvl[row][loweredCol] == 2 or \
+                    lvl[row][loweredCol] == 3 or \
+                    lvl[row][loweredCol] == 4:
                 self.isLeftClear = True
             else:
                 self.isLeftClear = False
@@ -69,7 +73,10 @@ class Player:
         try:
             if loweredCol < 0:
                 self.isRightClear = True
-            elif lvl[row][raisedCol] == 0 or lvl[row][raisedCol] == 2:
+            elif lvl[row][loweredCol] == 0 or \
+                    lvl[row][loweredCol] == 2 or \
+                    lvl[row][loweredCol] == 3 or \
+                    lvl[row][loweredCol] == 4:
                 self.isRightClear = True
             else:
                 self.isRightClear = False
@@ -140,6 +147,13 @@ class Player:
             if lvl[row][raisedCol] == 3:
                 self.lives += 1
                 lvl[row][raisedCol] = 0
+
+            # Flag
+            if lvl[row][loweredCol] == 4:
+                self.isAtFinish = True
+
+            if lvl[row][raisedCol] == 4:
+                self.isAtFinish = True
 
         except IndexError:
             pass
