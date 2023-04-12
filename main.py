@@ -8,7 +8,7 @@ fps = 60
 blockWidth = width / 40
 blockHeight = height / 20
 images = {}
-gameStates = ["startScreen", "inGame", "gameOver"]
+gameStates = ["startScreen", "inGame", "gameOver", "levelComplete"]
 isRestarting = False
 
 
@@ -54,6 +54,10 @@ def main():
 
             if player.lives <= 0:
                 gameState = gameStates[2]
+                continue
+
+            if player.isAtFinish:
+                gameState = gameStates[3]
                 continue
 
             for e in p.event.get():
@@ -102,12 +106,35 @@ def main():
                 if e.type == p.QUIT:
                     running = False
 
+        elif gameState == gameStates[3]:
+            # Level Complete
+
+            screen.fill(p.Color("light grey"))
+
+            # Level Complete Text
+            font = p.font.Font("freesansbold.ttf", 30)
+            levelCompleteText = font.render("Level Complete!", True, p.Color("grey 50"))
+            levelCompleteRect = levelCompleteText.get_rect()
+            levelCompleteRect.center = (width / 2, height / 2 - 50)
+            screen.blit(levelCompleteText, levelCompleteRect)
+
+            # Score Text
+            font = p.font.Font("freesansbold.ttf", 20)
+            scoreText = font.render(f"Your Score was {player.score}", True, p.Color("grey 50"))
+            scoreRect = scoreText.get_rect()
+            scoreRect.center = (width / 2, height / 2)
+            screen.blit(scoreText, scoreRect)
+
+            for e in p.event.get():
+                if e.type == p.QUIT:
+                    running = False
+
         clock.tick(fps)
         p.display.update()
 
 
 def loadImages():
-    items = ["block", "player", "star", "heart"]
+    items = ["block", "player", "star", "heart", "flag"]
     for item in items:
         images[item] = p.transform.scale(p.image.load("images/" + item + ".png"), (blockWidth, blockHeight))
 
