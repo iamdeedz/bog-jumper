@@ -1,11 +1,13 @@
 from levels import *
 from player import *
+from urllib.request import urlopen
 import pygame as p
+import io
 
 width = 1280
 height = 720
-fps = 60
-blockWidth = width / 40
+fps = 120
+blockWidth = width / 36
 blockHeight = height / 20
 images = {}
 gameStates = ["startScreen", "inGame", "gameOver", "levelComplete", "infoScreen"]
@@ -19,7 +21,18 @@ def main():
     clock = p.time.Clock()
     p.display.set_caption("Bog Jumper")
     p.display.set_icon(p.image.load("images/player.png"))
+
+    # Loading Images
+    screen.fill(p.Color("light grey"))
+    font = p.font.Font("freesansbold.ttf", 30)
+    loading = font.render("Loading...", True, p.Color("grey 50"))
+    loadingRect = loading.get_rect()
+    loadingRect.center = (width / 2, height / 2)
+    screen.blit(loading, loadingRect)
+    p.display.update()
+
     loadImages()
+
     levelName = "test"
     level = test
     player = Player(levelSpawns[levelName])
@@ -181,8 +194,14 @@ def main():
 def loadImages():
     items = ["block", "player", "star", "heart", "flag"]
     for item in items:
-        images[item] = p.transform.scale(p.image.load("images/" + item + ".png"), (blockWidth, blockHeight))
-    images["background"] = p.transform.scale(p.image.load("images/background.png"), (width, height))
+        imgUrl = f"https://iamdeedz.w3spaces.com/imgs/bog/{item}.png"
+        imgStr = urlopen(imgUrl).read()
+        imgFile = io.BytesIO(imgStr)
+        images[item] = p.transform.scale(p.image.load(imgFile), (blockWidth, blockHeight))
+    bgUrl = f"https://iamdeedz.w3spaces.com/imgs/bog/background.png"
+    bgStr = urlopen(bgUrl).read()
+    bgFile = io.BytesIO(bgStr)
+    images["background"] = p.transform.scale(p.image.load(bgFile), (width, height))
 
 
 if __name__ == '__main__':
