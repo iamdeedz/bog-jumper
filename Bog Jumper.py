@@ -182,6 +182,7 @@ def loadImages():
     items = ["block", "player", "star", "heart", "flag"]
     for item in items:
         images[item] = p.transform.scale(p.image.load("images/" + item + ".png"), (blockWidth, blockHeight))
+    images["background"] = p.transform.scale(p.image.load("images/background.png"), (width, height))
 
 
 if __name__ == '__main__':

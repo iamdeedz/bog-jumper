@@ -16,6 +16,10 @@ for _ in range(5):
 levelSpawns = {"test": {"r": 1, "c": 2}}
 
 
+def drawBackground(screen, bg):
+    screen.blit(bg, p.Rect(0, 0, 0, 0))
+
+
 def drawText(screen, player):
     # Score Text
     font = p.font.Font("freesansbold.ttf", 15)
@@ -97,6 +101,7 @@ def drawSprites(screen, lvl, player, images, blockDimensions, offsets):
 def drawGame(screen, lvl, player, images, blockWidth, blockHeight):
     xOffset = blockWidth * 5
     yOffset = blockHeight * 5
+    drawBackground(screen, images["background"])
     drawLevel(screen, lvl, player, images, [blockWidth, blockHeight], [xOffset, yOffset])
     drawSprites(screen, lvl, player, images, [blockWidth, blockHeight], [xOffset, yOffset])
     drawText(screen, player)
