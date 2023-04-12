@@ -73,10 +73,10 @@ class Player:
         try:
             if loweredCol < 0:
                 self.isRightClear = True
-            elif lvl[row][loweredCol] == 0 or \
-                    lvl[row][loweredCol] == 2 or \
-                    lvl[row][loweredCol] == 3 or \
-                    lvl[row][loweredCol] == 4:
+            elif lvl[row][raisedCol] == 0 or \
+                    lvl[row][raisedCol] == 2 or \
+                    lvl[row][raisedCol] == 3 or \
+                    lvl[row][raisedCol] == 4:
                 self.isRightClear = True
             else:
                 self.isRightClear = False
