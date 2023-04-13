@@ -1,16 +1,16 @@
-from levels import *
+from levels import Levels, drawGame
 from player import *
 from urllib.request import urlopen
 import pygame as p
 import io
 
-width = 1280
-height = 720
-fps = 120
+width = 1080
+height = 607.50
+fps = 144
 blockWidth = width / 36
 blockHeight = height / 20
 images = {}
-gameStates = ["startScreen", "inGame", "gameOver", "levelComplete", "infoScreen"]
+gameStates = ["startScreen", "inGame", "gameOver", "levelComplete", "gameComplete", "infoScreen"]
 isRestarting = False
 
 
@@ -19,8 +19,6 @@ def main():
     p.init()
     screen = p.display.set_mode((width, height))
     clock = p.time.Clock()
-    p.display.set_caption("Bog Jumper")
-    p.display.set_icon(p.image.load("images/player.png"))
 
     # Loading Images
     screen.fill(p.Color("light grey"))
@@ -33,9 +31,14 @@ def main():
 
     loadImages()
 
-    levelName = "test"
-    level = test
-    player = Player(levelSpawns[levelName])
+    p.display.set_caption("Bog Jumper")
+    p.display.set_icon(images["player"])
+
+    levels = Levels()
+    levelIndex = 1
+    levelName = f"level{levelIndex}"
+    level = levels.levels[levelName]
+    player = Player(levels.levelSpawns[levelName], False)
     running = True
     while running:
         if gameState == gameStates[0]:
@@ -50,18 +53,45 @@ def main():
             titleRect.center = (width / 2, height / 2 - 50)
             screen.blit(title, titleRect)
 
-            # Start Text
+            # Normal Mode Text
             font = p.font.Font("freesansbold.ttf", 20)
-            startText = font.render("Click Anywhere to Start", True, p.Color("grey 50"))
+            startText = font.render("Left-Click for Normal Mode", True, p.Color("grey 50"))
             startRect = startText.get_rect()
             startRect.center = (width / 2, height / 2)
             screen.blit(startText, startRect)
+
+            # Practice Mode Text
+            font = p.font.Font("freesansbold.ttf", 20)
+            startText = font.render("Right-Click for Practice Mode", True, p.Color("grey 50"))
+            startRect = startText.get_rect()
+            startRect.center = (width / 2, height / 2 + 50)
+            screen.blit(startText, startRect)
+
+            # Controls
+            font = p.font.Font("freesansbold.ttf", 20)
+            controls = font.render("Use Arrow Keys to Move", True, p.Color("grey 50"))
+            controlsRect = controls.get_rect()
+            controlsRect.center = (width / 2, height / 2 + 100)
+            screen.blit(controls, controlsRect)
+
+            # Credits
+            font = p.font.Font("freesansbold.ttf", 20)
+            credits = font.render("Created by: Diarmuid Eager ¦ Artwork by Sam McEvoy", True, p.Color("grey 50"))
+            creditsRect = credits.get_rect()
+            creditsRect.center = (width / 2, height - 50)
+            screen.blit(credits, creditsRect)
 
             for e in p.event.get():
                 if e.type == p.QUIT:
                     running = False
                 elif e.type == p.MOUSEBUTTONDOWN:
-                    gameState = gameStates[1]
+                    if e.button == 1:
+                        player.isPracticeMode = False
+                        gameState = gameStates[1]
+                    elif e.button == 3:
+                        player.isPracticeMode = True
+                        player.lives = 999
+                        gameState = gameStates[1]
 
         elif gameState == gameStates[1]:
             # In Game
@@ -71,7 +101,11 @@ def main():
                 continue
 
             if player.isAtFinish:
-                gameState = gameStates[3]
+                if levelIndex == len(levels.levels):
+                    gameState = gameStates[4]
+                else:
+                    gameState = gameStates[3]
+
                 continue
 
             for e in p.event.get():
@@ -95,7 +129,7 @@ def main():
                         player.isUpPressed = False
             screen.fill(p.Color("black"))
             player.update(level)
-            drawGame(screen, level, player, images, blockWidth, blockHeight)
+            drawGame(screen, level, levelIndex, player, images, blockWidth, blockHeight)
 
         elif gameState == gameStates[2]:
             # Game Over
@@ -139,20 +173,50 @@ def main():
             scoreRect.center = (width / 2, height / 2)
             screen.blit(scoreText, scoreRect)
 
-            # Surprise Text
+            # Next Level Text
             font = p.font.Font("freesansbold.ttf", 20)
-            surpriseText = font.render(f"Click to Learn More About the Lizard!", True, p.Color("grey 50"))
-            surpriseRect = surpriseText.get_rect()
-            surpriseRect.center = (width / 2, height / 2 + 50)
-            screen.blit(surpriseText, surpriseRect)
+            nextLevelText = font.render(f"Click for the next level", True, p.Color("grey 50"))
+            nextLevelRect = nextLevelText.get_rect()
+            nextLevelRect.center = (width / 2, height / 2 + 50)
+            screen.blit(nextLevelText, nextLevelRect)
 
             for e in p.event.get():
                 if e.type == p.QUIT:
                     running = False
                 elif e.type == p.MOUSEBUTTONDOWN:
-                    gameState = gameStates[4]
+                    levelIndex += 1
+                    levelName = f"level{levelIndex}"
+                    level = levels.levels[levelName]
+                    player = Player(levels.levelSpawns[levelName], player.isPracticeMode)
+                    gameState = gameStates[1]
 
         elif gameState == gameStates[4]:
+            # Game Complete
+
+            screen.fill(p.Color("light grey"))
+
+            # Game Complete Text
+            font = p.font.Font("freesansbold.ttf", 30)
+            gameCompleteText = font.render("Congratulations! Game Complete! Thanks for playing!", True, p.Color("grey "
+                                                                                                                "50"))
+            gameCompleteRect = gameCompleteText.get_rect()
+            gameCompleteRect.center = (width / 2, height / 2 - 50)
+            screen.blit(gameCompleteText, gameCompleteRect)
+
+            # Lizard Text
+            font = p.font.Font("freesansbold.ttf", 20)
+            lizardText = font.render(f"Click to Learn More About the Lizard!", True, p.Color("grey 50"))
+            lizardRect = lizardText.get_rect()
+            lizardRect.center = (width / 2, height / 2 + 50)
+            screen.blit(lizardText, lizardRect)
+
+            for e in p.event.get():
+                if e.type == p.QUIT:
+                    running = False
+                elif e.type == p.MOUSEBUTTONDOWN:
+                    gameState = gameStates[5]
+
+        elif gameState == gameStates[5]:
             # Info Screen
 
             screen.fill(p.Color("light grey"))
@@ -192,13 +256,13 @@ def main():
 
 
 def loadImages():
-    items = ["block", "player", "star", "heart", "flag"]
+    items = ["block", "player", "star", "super-star", "heart", "flag"]
     for item in items:
-        imgUrl = f"https://iamdeedz.w3spaces.com/imgs/bog/{item}.png"
+        imgUrl = f"https://static-iamdeedz.w3spaces.com/imgs/bog/{item}.png"
         imgStr = urlopen(imgUrl).read()
         imgFile = io.BytesIO(imgStr)
         images[item] = p.transform.scale(p.image.load(imgFile), (blockWidth, blockHeight))
-    bgUrl = f"https://iamdeedz.w3spaces.com/imgs/bog/background.png"
+    bgUrl = f"https://static-iamdeedz.w3spaces.com/imgs/bog/background.png"
     bgStr = urlopen(bgUrl).read()
     bgFile = io.BytesIO(bgStr)
     images["background"] = p.transform.scale(p.image.load(bgFile), (width, height))

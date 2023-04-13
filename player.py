@@ -2,14 +2,18 @@ from math import floor, ceil
 
 
 class Player:
-    def __init__(self, lvlSpawn):
+    def __init__(self, lvlSpawn, isPracticeMode):
         col = lvlSpawn["c"]
         row = lvlSpawn["r"]
+        self.isPracticeMode = isPracticeMode
         self.spawn = {"c": col, "r": row}
         self.position = {"c": col, "r": row}
         self.xVelocity = 0
         self.yVelocity = 0
-        self.lives = 1
+        if self.isPracticeMode:
+            self.lives = 999
+        else:
+            self.lives = 1
         self.score = 0
         self.isRightPressed = False
         self.isLeftPressed = False
@@ -105,11 +109,11 @@ class Player:
 
         # Jumping
         if self.isUpPressed and self.isGrounded:
-            self.yVelocity = -0.3
+            self.yVelocity = -0.4
 
         # Gravity
         if self.yVelocity < 0:
-            if self.yVelocity > -0.05 or not self.isTopClear:
+            if self.yVelocity > -0.1 or not self.isTopClear:
                 self.yVelocity = 0
             else:
                 self.yVelocity *= 0.85
@@ -117,7 +121,7 @@ class Player:
             if self.isGrounded:
                 self.yVelocity = 0
             else:
-                self.yVelocity = 0.15
+                self.yVelocity = 0.25
 
         self.position["c"] += self.xVelocity
         self.position["r"] += self.yVelocity
@@ -139,20 +143,29 @@ class Player:
                 self.score += 1
                 lvl[row][raisedCol] = 0
 
-            # Hearts
+            # Super Stars
             if lvl[row][loweredCol] == 3:
-                self.lives += 1
+                self.score += 3
                 lvl[row][loweredCol] = 0
 
             if lvl[row][raisedCol] == 3:
+                self.score += 3
+                lvl[row][raisedCol] = 0
+
+            # Hearts
+            if lvl[row][loweredCol] == 4:
+                self.lives += 1
+                lvl[row][loweredCol] = 0
+
+            if lvl[row][raisedCol] == 4:
                 self.lives += 1
                 lvl[row][raisedCol] = 0
 
             # Flag
-            if lvl[row][loweredCol] == 4:
+            if lvl[row][loweredCol] == 5:
                 self.isAtFinish = True
 
-            if lvl[row][raisedCol] == 4:
+            if lvl[row][raisedCol] == 5:
                 self.isAtFinish = True
 
         except IndexError:
