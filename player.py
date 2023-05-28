@@ -13,7 +13,7 @@ class Player:
         if self.isPracticeMode:
             self.lives = 999
         else:
-            self.lives = 1
+            self.lives = 3
         self.score = 0
         self.isRightPressed = False
         self.isLeftPressed = False
