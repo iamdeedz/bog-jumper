@@ -258,11 +258,11 @@ def main():
 def loadImages():
     items = ["block", "player", "star", "super-star", "heart", "flag"]
     for item in items:
-        imgUrl = f"https://static-iamdeedz.w3spaces.com/imgs/bog/{item}.png"
+        imgUrl = f"https://iamdeedz.github.io/bog/{item}.png"
         imgStr = urlopen(imgUrl).read()
         imgFile = io.BytesIO(imgStr)
         images[item] = p.transform.scale(p.image.load(imgFile), (blockWidth, blockHeight))
-    bgUrl = f"https://static-iamdeedz.w3spaces.com/imgs/bog/background.png"
+    bgUrl = f"https://iamdeedz.github.io/bog/background.png"
     bgStr = urlopen(bgUrl).read()
     bgFile = io.BytesIO(bgStr)
     images["background"] = p.transform.scale(p.image.load(bgFile), (width, height))
