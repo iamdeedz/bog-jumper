@@ -96,7 +96,7 @@ class Player:
         elif not self.isRightPressed:
             self.xVelocity = 0
         else:
-            self.xVelocity = 0.2
+            self.xVelocity = 0.1
 
         # Left
         if not self.isLeftClear:
@@ -105,7 +105,7 @@ class Player:
         elif self.xVelocity <= 0 and not self.isLeftPressed:
             self.xVelocity = 0
         elif self.isLeftPressed:
-            self.xVelocity = -0.2
+            self.xVelocity = -0.1
 
         # Jumping
         if self.isUpPressed and self.isGrounded:
@@ -116,12 +116,12 @@ class Player:
             if self.yVelocity > -0.1 or not self.isTopClear:
                 self.yVelocity = 0
             else:
-                self.yVelocity *= 0.85
+                self.yVelocity *= 0.9
         else:
             if self.isGrounded:
                 self.yVelocity = 0
             else:
-                self.yVelocity = 0.25
+                self.yVelocity = 0.15
 
         self.position["c"] += self.xVelocity
         self.position["r"] += self.yVelocity

@@ -112,20 +112,20 @@ def main():
                 if e.type == p.QUIT:
                     running = False
                 elif e.type == p.KEYDOWN:
-                    if e.key == p.K_RIGHT:
+                    if e.key == p.K_d:
                         player.isRightPressed = True
                         player.orientation = "right"
-                    if e.key == p.K_LEFT:
+                    if e.key == p.K_a:
                         player.isLeftPressed = True
                         player.orientation = "left"
-                    if e.key == p.K_UP:
+                    if e.key == p.K_w:
                         player.isUpPressed = True
                 elif e.type == p.KEYUP:
-                    if e.key == p.K_RIGHT:
+                    if e.key == p.K_d:
                         player.isRightPressed = False
-                    if e.key == p.K_LEFT:
+                    if e.key == p.K_a:
                         player.isLeftPressed = False
-                    if e.key == p.K_UP:
+                    if e.key == p.K_w:
                         player.isUpPressed = False
             screen.fill(p.Color("black"))
             player.update(level)
